@@ -20,12 +20,12 @@ pipeline {
 
         stage("Build and re-start docker compose services") {
             environment {
-
+                WORDPRESS_DB_PASSWORD = credentials('WORDPRESS_DB_PASSWORD')
             }
             steps {
                 sh '''
                  cd wordpress
-                 docker compose build --build-arg WORDPRESS_DB_PASSWORD='WORDPRESS_DB_PASSWORD'
+                 docker compose build --build-arg WORDPRESS_DB_PASSWORD='$WORDPRESS_DB_PASSWORD'
                  docker compose up -d 
               '''
             }
