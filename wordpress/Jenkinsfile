@@ -1,0 +1,34 @@
+pipeline {
+
+    agent any
+
+    stages {
+
+        stage("Verify tooling") {
+            steps {
+                sh '''
+              cd wordpress
+              docker version
+              docker info
+              docker compose version
+              curl --version
+              jq --version
+              docker compose ps
+            '''
+            }
+        }
+
+        stage("Build and re-start docker compose services") {
+            environment {
+
+            }
+            steps {
+                sh '''
+                 cd wordpress
+                 docker compose build --build-arg KEYCLOAK_SECRET='$KEYCLOAK_SECRET' --build-arg SPRING_DATASOURCE_PASSWORD='$SPRING_DATASOURCE_PASSWORD'
+                 docker compose up -d 
+              '''
+            }
+        }
+    }
+}
