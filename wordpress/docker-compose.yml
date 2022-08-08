@@ -3,6 +3,8 @@ services:
     image: wordpress:latest
     ports:
       - 8085:80
+    volumes:
+      - .htaccess:/var/www/html/.htaccess
     restart: always
     environment:
       - WORDPRESS_DB_HOST=192.168.1.2
