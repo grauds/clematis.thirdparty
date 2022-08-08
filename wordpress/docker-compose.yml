@@ -5,6 +5,7 @@ services:
       - 8085:80
     volumes:
       - .htaccess:/var/www/html/.htaccess
+      - /home/wordpress/media:/var/www/html/wp-content
     restart: always
     environment:
       - WORDPRESS_DB_HOST=192.168.1.2
