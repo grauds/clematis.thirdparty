@@ -22,12 +22,16 @@ pipeline {
             environment {
                 MYSQL_USER = credentials('ZABBIX_DB_USER')
                 MYSQL_PASSWORD = credentials('ZABBIX_DB_PASSWORD')
+                MYSQL_ROOT_USER = credentials('ZABBIX_ROOT_DB_USER')
+                MYSQL_ROOT_PASSWORD = credentials('ZABBIX_ROOT_DB_PASSWORD')
             }
             steps {
                 sh '''
                  cd zabbix
                  docker compose build --build-arg MYSQL_USER='$MYSQL_USER' \
-                                      --build-arg MYSQL_PASSWORD='$MYSQL_PASSWORD' 
+                                      --build-arg MYSQL_PASSWORD='$MYSQL_PASSWORD' \
+                                      --build-arg MYSQL_ROOT_USER='$MYSQL_ROOT_USER' \
+                                      --build-arg MYSQL_ROOT_PASSWORD='$MYSQL_ROOT_PASSWORD'
                  docker compose up -d 
               '''
             }
