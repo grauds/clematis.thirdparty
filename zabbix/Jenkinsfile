@@ -1,0 +1,34 @@
+pipeline {
+
+    agent any
+
+    stages {
+
+        stage("Verify tooling") {
+            steps {
+                sh '''
+              cd zabbix
+              docker version
+              docker info
+              docker compose version
+              curl --version
+              jq --version
+              docker compose ps
+            '''
+            }
+        }
+
+        stage("Build and re-start docker compose services") {
+            steps {
+                sh '''
+                 cd zabbix
+                 docker compose build --build-arg MYSQL_USER='$ZABBIX_DB_USER' \
+                                      --build-arg MYSQL_PASSWORD='$ZABBIX_DB_PASSWORD' \
+                                      --build-arg MYSQL_ROOT_USER='$ZABBIX_DB_ROOT_USER' \
+                                      --build-arg MYSQL_PASSWORD='$ZABBIX_DB_ROOT_PASSWORD'
+                 docker compose up -d 
+              '''
+            }
+        }
+    }
+}
