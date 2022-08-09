@@ -19,13 +19,15 @@ pipeline {
         }
 
         stage("Build and re-start docker compose services") {
+            environment {
+                MYSQL_USER = credentials('ZABBIX_DB_USER')
+                MYSQL_PASSWORD = credentials('ZABBIX_DB_PASSWORD')
+            }
             steps {
                 sh '''
                  cd zabbix
-                 docker compose build --build-arg MYSQL_USER='$ZABBIX_DB_USER' \
-                                      --build-arg MYSQL_PASSWORD='$ZABBIX_DB_PASSWORD' \
-                                      --build-arg MYSQL_ROOT_USER='$ZABBIX_DB_ROOT_USER' \
-                                      --build-arg MYSQL_PASSWORD='$ZABBIX_DB_ROOT_PASSWORD'
+                 docker compose build --build-arg MYSQL_USER='$MYSQL_USER' \
+                                      --build-arg MYSQL_PASSWORD='$MYSQL_PASSWORD' 
                  docker compose up -d 
               '''
             }
