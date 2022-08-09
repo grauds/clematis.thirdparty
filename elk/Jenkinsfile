@@ -1,0 +1,31 @@
+pipeline {
+
+    agent any
+
+    stages {
+
+        stage("Verify tooling") {
+            steps {
+                sh '''
+              cd elk
+              docker version
+              docker info
+              docker compose version
+              curl --version
+              jq --version
+              docker compose ps
+            '''
+            }
+        }
+
+        stage("Build and re-start docker compose services") {
+            steps {
+                sh '''
+                 cd elk
+                 docker compose build
+                 docker compose up -d 
+              '''
+            }
+        }
+    }
+}
