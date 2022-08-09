@@ -31,11 +31,6 @@ services:
     env_file:
       - ./env_vars/.env_db_mysql
       - ./env_vars/.env_srv
-    secrets:
-      - MYSQL_USER
-      - MYSQL_PASSWORD
-      - MYSQL_ROOT_USER
-      - MYSQL_ROOT_PASSWORD
     networks:
       zbx_net_backend:
         aliases:
@@ -79,9 +74,6 @@ services:
     env_file:
       - ./env_vars/.env_db_mysql
       - ./env_vars/.env_web
-    secrets:
-      - MYSQL_USER
-      - MYSQL_PASSWORD
     depends_on:
       - zabbix-server
     healthcheck:
@@ -205,39 +197,6 @@ services:
       com.zabbix.component: "snmptraps"
       com.zabbix.os: "ubuntu"
 
-  zabbix-web-service:
-    image: zabbix/zabbix-web-service:ubuntu-6.2-latest
-    profiles:
-      - full
-      - all
-    ports:
-      - "10053:10053"
-    volumes:
-      - /home/zabbix/var/lib/zabbix/enc:/var/lib/zabbix/enc:ro
-    cap_add:
-      - SYS_ADMIN
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
-          memory: 256M
-    env_file:
-      - ./env_vars/.env_web_service
-    networks:
-      zbx_net_backend:
-        aliases:
-          - zabbix-web-service
-          - zabbix-web-service-ubuntu
-    stop_grace_period: 5s
-    labels:
-      com.zabbix.description: "Zabbix web service"
-      com.zabbix.company: "Zabbix LLC"
-      com.zabbix.component: "web-service"
-      com.zabbix.os: "ubuntu"
-
 networks:
   zbx_net_frontend:
     driver: bridge
@@ -259,14 +218,4 @@ networks:
 
 volumes:
   snmptraps:
-
-secrets:
-  MYSQL_USER:
-    file: ./env_vars/.MYSQL_USER
-  MYSQL_PASSWORD:
-    file: ./env_vars/.MYSQL_PASSWORD
-  MYSQL_ROOT_USER:
-    file: ./env_vars/.MYSQL_ROOT_USER
-  MYSQL_ROOT_PASSWORD:
-    file: ./env_vars/.MYSQL_ROOT_PASSWORD
 
